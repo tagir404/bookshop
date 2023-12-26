@@ -1,0 +1,26 @@
+@import './reset.css';
+
+:root {
+    --text-black: #1C2A39;
+    --text-gray: #5C6A79;
+    --swiper-pagination-color: #9E98DC;
+    --swiper-pagination-bullet-size: 12px;
+    --swiper-pagination-bullet-inactive-color: #EFEEF6;
+    --swiper-pagination-bullet-inactive-opacity: 1;
+}
+
+body {
+    color: var(--text-black);
+    font-family: 'Montserrat', sans-serif;
+}
+
+img {
+	width: 100%;
+}
+
+.container {
+    width: 100%;
+    max-width: 1160px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
