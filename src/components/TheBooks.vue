@@ -9,7 +9,7 @@ const bookList = ref<Array<Book>>([])
 
 onBeforeMount(async () => {
     const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=subject${currentSubject.value}&maxResults=15&key=AIzaSyDVFNhCYYVpyiO8HFmkSEUz92MSoczKt2Q`
+        `https://www.googleapis.com/books/v1/volumes?q=subject${currentSubject.value}&maxResults=15&key=${import.meta.env.VITE_GOOGLE_BOOKS_API_KEY}`
     ).then(res => res.json())
     bookList.value = res.items
 })
@@ -31,14 +31,18 @@ onBeforeMount(async () => {
                     </li>
                 </ul>
             </aside>
-            <div class="book-list">
-                <BookItem v-for="(book, i) in bookList" :key="i" :book="book" />
+            <div class="book-list" v-if="bookList.length">
+                <BookItem v-for="(book, i) in bookList" :key="i" :volumeId="book.id" />
             </div>
         </div>
     </section>
 </template>
 
 <style scoped>
+.container {
+    display: flex;
+}
+
 .subjects {
     display: flex;
     flex-direction: column;
@@ -73,23 +77,5 @@ onBeforeMount(async () => {
     display: flex;
     flex-wrap: wrap;
     gap: 90px 75px;
-}
-
-.book {
-    display: flex;
-}
-
-.book-img {
-    width: 128px;
-}
-
-.author {
-    color: var(--text-gray);
-    font-family: 'Open Sans';
-    font-size: 10px;
-}
-
-.title {
-    font-weight: bold;
 }
 </style>

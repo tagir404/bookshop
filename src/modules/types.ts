@@ -3,9 +3,10 @@ interface Book {
         authors: Array<string>,
         title: string,
         imageLinks: {
-            thumbnail: string
+            small: string
         }
     },
+    id: string
 }
 
 export type { Book }
