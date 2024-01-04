@@ -3,7 +3,6 @@ export default [
     'Art & Fashion',
     'Biography',
     'Business',
-    'Crafts & Hobbies',
     'Drama',
     'Fiction',
     'Food & Drink',

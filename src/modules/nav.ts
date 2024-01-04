@@ -14,5 +14,5 @@ export default [
     {
         text: 'blog',
         link: '/#'
-    },
+    }
 ]

@@ -1,11 +1,12 @@
 @import './reset.css';
 
 :root {
-    --text-black: #1C2A39;
-    --text-gray: #5C6A79;
-    --swiper-pagination-color: #9E98DC;
+    --btn-primary: #4c3db2;
+    --text-black: #1c2a39;
+    --text-gray: #5c6a79;
+    --swiper-pagination-color: #9e98dc;
     --swiper-pagination-bullet-size: 12px;
-    --swiper-pagination-bullet-inactive-color: #EFEEF6;
+    --swiper-pagination-bullet-inactive-color: #efeef6;
     --swiper-pagination-bullet-inactive-opacity: 1;
 }
 
@@ -15,7 +16,7 @@ body {
 }
 
 img {
-	width: 100%;
+    width: 100%;
 }
 
 .container {
@@ -23,4 +24,25 @@ img {
     max-width: 1160px;
     padding: 0 20px;
     margin: 0 auto;
+}
+
+.btn-primary {
+    color: var(--btn-primary);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 1px solid var(--btn-primary);
+    height: 45px;
+    width: 176px;
+    padding: 0 10px;
+    transition: all 200ms linear;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background: var(--btn-primary);
+}
+
+.main-swiper::part(pagination) {
+    position: static;
 }

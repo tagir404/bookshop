@@ -1,22 +1,63 @@
 <script setup lang="ts">
 import subjects from '@/modules/subjects'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import type { Book } from '@/modules/types'
-import BookItem from './BookItem.vue';
+import BookItem from './BookItem.vue'
+
+const props = defineProps<{
+    basket: string[]
+}>()
+
+const emit = defineEmits<{
+    addInTheCart: [bookId: string]
+}>()
 
 const currentSubject = ref(subjects[0])
 const bookList = ref<Array<Book>>([])
+const reqStartIndex = ref(0)
+const noMoreBooksState = ref(false)
+const step = 6
+
+async function getBookList() {
+    const res = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(
+            currentSubject.value
+        )}&langRestrict=ru&filter=paid-ebooks&startIndex=${reqStartIndex.value}&maxResults=6&key=${
+            import.meta.env.VITE_GOOGLE_BOOKS_API_KEY
+        }`
+    )
+        .then(res => res.json())
+        .then(data => data.items)
+    return res
+}
+
+async function loadMoreBooks() {
+    reqStartIndex.value += step
+    const newBooks = await getBookList()
+    newBooks ? bookList.value.push(...newBooks) : noMoreBooks()
+}
+
+watch(currentSubject, async () => {
+    noMoreBooksState.value = false
+    reqStartIndex.value = 0
+    bookList.value = await getBookList()
+})
 
 onBeforeMount(async () => {
-    const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=subject${currentSubject.value}&maxResults=15&key=${import.meta.env.VITE_GOOGLE_BOOKS_API_KEY}`
-    ).then(res => res.json())
-    bookList.value = res.items
+    bookList.value = await getBookList()
 })
+
+function noMoreBooks() {
+    noMoreBooksState.value = true
+}
+
+function handleAddInTheCart(bookId: string) {
+    emit('addInTheCart', bookId)
+}
 </script>
 
 <template>
-    <section>
+    <section class="main">
         <div class="container">
             <aside>
                 <ul class="subjects">
@@ -31,22 +72,66 @@ onBeforeMount(async () => {
                     </li>
                 </ul>
             </aside>
-            <div class="book-list" v-if="bookList.length">
-                <BookItem v-for="(book, i) in bookList" :key="i" :volumeId="book.id" />
+            <div class="books">
+                <div
+                    class="book-list"
+                    v-if="bookList?.length"
+                >
+                    <BookItem
+                        class="book-item"
+                        v-for="(book, i) in bookList"
+                        :key="i"
+                        :volumeId="book.id"
+                        :inTheCart="props.basket.includes(book.id)"
+                        @addInTheCart="handleAddInTheCart"
+                    />
+                </div>
+                <button
+                    class="more-books-btn btn-primary"
+                    @click="loadMoreBooks"
+                    v-if="!noMoreBooksState && bookList?.length"
+                >
+                    Load more
+                </button>
             </div>
         </div>
     </section>
 </template>
 
 <style scoped>
+.main {
+    padding-top: 20px;
+}
+
 .container {
     display: flex;
+    align-items: flex-start;
+}
+
+aside {
+    padding: 45px 0 81px 0;
+    background: #efeef6;
+    position: relative;
+}
+
+aside::before {
+    content: '';
+    display: flex;
+    background-color: inherit;
+    position: absolute;
+    left: -1000vw;
+    right: -90px;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
 }
 
 .subjects {
     display: flex;
     flex-direction: column;
     gap: 23px;
+    white-space: nowrap;
+    min-width: 190px;
 }
 
 .subject {
@@ -66,16 +151,81 @@ onBeforeMount(async () => {
 
 .subject.active::before {
     content: '';
-    width: 6px;
-    height: 6px;
+    min-width: 6px;
+    min-height: 6px;
     border-radius: 50%;
     background: #756ad3;
     margin-right: 14px;
 }
 
+.books {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 45px;
+}
+
 .book-list {
+    padding-left: 24px;
+    padding-top: 45px;
     display: flex;
     flex-wrap: wrap;
-    gap: 90px 75px;
+    justify-content: center;
+    gap: 91px 50px;
+    margin-bottom: 84px;
+}
+
+.more-books-btn {
+    align-self: center;
+}
+
+@media (max-width: 768px) {
+    .subjects {
+        min-width: 150px;
+        gap: 15px;
+    }
+
+    .subject {
+        font-size: 10px;
+    }
+
+    .subject.active {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        flex-direction: column;
+    }
+
+    aside {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    aside::before {
+        left: -20px;
+        right: -20px;
+    }
+
+    .subjects {
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .subject.active::before {
+        margin-right: 7px;
+    }
+
+    .book-list {
+        padding: 0;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
 }
 </style>
