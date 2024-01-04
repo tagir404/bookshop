@@ -37,6 +37,10 @@ watch(
 function addInTheCart(bookId: string) {
     emit('addInTheCart', bookId)
 }
+
+function fixReqString(str: string) {
+    return str?.replace('http://', 'https://')
+}
 </script>
 
 <template>
@@ -46,7 +50,7 @@ function addInTheCart(bookId: string) {
     >
         <img
             class="book__img"
-            :src="book.volumeInfo.imageLinks?.small || bookCoverPhoto"
+            :src="fixReqString(book.volumeInfo.imageLinks?.small) || bookCoverPhoto"
             alt="Изображение книги"
         />
 
