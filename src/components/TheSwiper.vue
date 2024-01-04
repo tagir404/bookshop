@@ -2,11 +2,9 @@
 import { register } from 'swiper/element/bundle'
 register()
 
-const slides = [
-    './src/assets/img/slides/1.jpg',
-    './src/assets/img/slides/2.jpg',
-    './src/assets/img/slides/3.jpg'
-]
+function getImageUrl(index: number) {
+  return new URL(`../assets/img/slides/${index}.jpg`, import.meta.url).href
+}
 </script>
 
 <template>
@@ -18,13 +16,10 @@ const slides = [
             class="main-swiper"
         >
             <swiper-slide
-                v-for="(slide, i) in slides"
+                v-for="(slide, i) in 3"
                 :key="i"
             >
-                <img
-                    :src="slide"
-                    :alt="`Слайд ${i + 1}`"
-                />
+                <img :src="getImageUrl(slide)" :alt="`Слайд ${i + 1}`" />
             </swiper-slide>
         </swiper-container>
     </div>
