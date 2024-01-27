@@ -14,8 +14,9 @@ const basketStore = useBasketStore()
             :key="book.id"
         >
             <img
+                class="book__img"
                 :src="fixReqString(book.volumeInfo.imageLinks?.small) || bookCoverPhoto"
-                alt=""
+                alt="Обложка книги"
             />
             <div class="book__info">
                 <h2 class="book__title">{{ book.volumeInfo.title }}</h2>
@@ -37,9 +38,13 @@ const basketStore = useBasketStore()
 
 .book {
     display: flex;
+    align-items: flex-start;
     border: 1px solid #000;
     border-radius: 10px;
     overflow: hidden;
+
+    &__img {
+    }
 
     &__info {
         display: flex;
@@ -49,12 +54,12 @@ const basketStore = useBasketStore()
     }
 
     &__title {
-        font-size: 36px;
+        font-size: 30px;
         font-weight: bold;
     }
 
     &__price {
-        font-size: 24px;
+        font-size: 20px;
     }
 }
 </style>

@@ -9,7 +9,7 @@ const balanceStore = useBalanceStore()
     <header>
         <div class="container">
             <RouterLink to="/" class="shopname">Bookshop</RouterLink>
-            <p class="balance">Баланс: {{ balanceStore.balance }} &#8381;</p>
+            <!-- <p class="balance">Баланс: {{ balanceStore.balance }} &#8381;</p> -->
             <div class="header-btns">
                 <button class="btn-user"></button>
                 <RouterLink to="/basket" class="btn-bag">
