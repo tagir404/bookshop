@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, watch } from 'vue'
+import { onBeforeMount, ref, watch, computed } from 'vue'
 import type { Book } from '@/modules/types'
 import bookCoverPhoto from '@/assets/img/book-cover.png'
+import { useBasketStore } from '@/store/store'
+import { fixReqString } from '@/modules/utils'
+
+const basketStore = useBasketStore()
 
 const props = defineProps<{
     volumeId: string
-    inTheCart: boolean
-}>()
-
-const emit = defineEmits<{
-    addInTheCart: [bookId: string]
 }>()
 
 const book = ref<Book | null>(null)
+const inTheCart = computed(() => !!basketStore.books.find(theBook => theBook.id === book.value?.id))
 
 async function getBookInfo() {
     const res = await fetch(
@@ -33,14 +33,6 @@ watch(
         book.value = await getBookInfo()
     }
 )
-
-function addInTheCart(bookId: string) {
-    emit('addInTheCart', bookId)
-}
-
-function fixReqString(str: string) {
-    return str?.replace('http://', 'https://')
-}
 </script>
 
 <template>
@@ -73,7 +65,7 @@ function fixReqString(str: string) {
             <p class="book__price">{{ Math.round(book.saleInfo.retailPrice.amount) }} &#8381;</p>
             <button
                 class="book__btn-buy btn-primary"
-                @click="addInTheCart(book.id)"
+                @click="basketStore.addBookInBasket(book)"
                 :disabled="inTheCart"
             >
                 {{ inTheCart ? 'In the cart' : 'Buy now' }}
@@ -172,3 +164,4 @@ function fixReqString(str: string) {
     }
 }
 </style>
+@/store/store

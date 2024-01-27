@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import TheBooks from './components/TheBooks.vue'
+import { onMounted, ref } from 'vue';
 import TheHeader from './components/TheHeader.vue'
-import TheSwiper from './components/TheSwiper.vue'
 
-const basket = ref<string[]>(JSON.parse(localStorage.getItem('basket') || '[]'))
+const headerHeight = ref(0)
 
-function addInTheCart(bookId: string) {
-    basket.value.push(bookId)
-    localStorage.setItem('basket', JSON.stringify(basket.value))
-}
+onMounted(() => {
+    headerHeight.value = document.querySelector('header')?.offsetHeight || 0
+})
 </script>
 
 <template>
-    <TheHeader :basketLength="basket.length" />
-    <TheSwiper />
-    <TheBooks
-        @addInTheCart="addInTheCart"
-        :basket="basket"
-    />
+    <TheHeader />
+    <main :style="`margin-top: ${headerHeight}px`">
+        <RouterView />
+    </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+</style>

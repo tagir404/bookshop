@@ -1,35 +1,20 @@
 <script setup lang="ts">
-import nav from '@/modules/nav'
+import { useBasketStore, useBalanceStore } from '@/store/store'
 
-const props = defineProps<{
-    basketLength: number
-}>()
+const basketStore = useBasketStore()
+const balanceStore = useBalanceStore()
 </script>
 
 <template>
     <header>
         <div class="container">
-            <p class="shopname">Bookshop</p>
-            <nav>
-                <ul class="nav-list">
-                    <li
-                        v-for="(item, i) in nav"
-                        :key="i"
-                    >
-                        <a
-                            class="nav-link"
-                            :href="item.link"
-                            >{{ item.text }}</a
-                        >
-                    </li>
-                </ul>
-            </nav>
+            <RouterLink to="/" class="shopname">Bookshop</RouterLink>
+            <p class="balance">Баланс: {{ balanceStore.balance }} &#8381;</p>
             <div class="header-btns">
                 <button class="btn-user"></button>
-                <button class="btn-search"></button>
-                <button class="btn-bag">
-                    <span v-if="props.basketLength">{{ props.basketLength }}</span>
-                </button>
+                <RouterLink to="/basket" class="btn-bag">
+                    <span v-if="basketStore.books.length">{{ basketStore.books.length }}</span>
+                </RouterLink>
             </div>
         </div>
     </header>
@@ -37,15 +22,22 @@ const props = defineProps<{
 
 <style scoped>
 header {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    background: #fff;
     height: 116px;
     display: flex;
     align-items: center;
+    box-shadow: 1px 1px 40px #f7f7f7;
 }
 
 .container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 30px;
 }
 
 .shopname {
@@ -53,16 +45,9 @@ header {
     font-weight: 700;
 }
 
-.nav-list {
-    display: flex;
-    gap: 40px;
-}
-
-.nav-link {
-    color: var(--text-gray);
-    font-size: 10px;
-    font-weight: bold;
-    text-transform: uppercase;
+.balance {
+    font-size: 20px;
+    margin-left: auto;
 }
 
 .header-btns {
@@ -75,12 +60,6 @@ header {
     width: 12px;
     height: 15px;
     background: url('@/assets/img/user.svg') no-repeat center;
-}
-
-.btn-search {
-    width: 15px;
-    height: 15px;
-    background: url('@/assets/img/search.svg') no-repeat center;
 }
 
 .btn-bag {
@@ -102,6 +81,8 @@ header {
     border-radius: 50%;
     background: #ff353a;
     position: absolute;
+    bottom: -7px;
+    right: -7px;
 }
 
 @media (max-width: 768px) {
@@ -112,32 +93,19 @@ header {
     }
 
     .container {
-        flex-wrap: wrap;
         gap: 15px;
     }
 
     .shopname {
-        font-size: 22px;
-        order: 1;
+        font-size: 18px;
+    }
+
+    .balance {
+        font-size: 14px;
     }
 
     .header-btns {
-        order: 2;
         gap: 15px;
-    }
-
-    nav {
-        order: 3;
-        width: 100%;
-    }
-
-    .nav-list {
-        gap: 15px;
-        text-align: center;
-    }
-
-    .nav-link {
-        text-align: center;
     }
 }
 </style>

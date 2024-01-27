@@ -4,14 +4,6 @@ import { onBeforeMount, ref, watch } from 'vue'
 import type { Book } from '@/modules/types'
 import BookItem from './BookItem.vue'
 
-const props = defineProps<{
-    basket: string[]
-}>()
-
-const emit = defineEmits<{
-    addInTheCart: [bookId: string]
-}>()
-
 const currentSubject = ref(subjects[0])
 const bookList = ref<Array<Book>>([])
 const reqStartIndex = ref(0)
@@ -50,10 +42,6 @@ onBeforeMount(async () => {
 function noMoreBooks() {
     noMoreBooksState.value = true
 }
-
-function handleAddInTheCart(bookId: string) {
-    emit('addInTheCart', bookId)
-}
 </script>
 
 <template>
@@ -79,11 +67,9 @@ function handleAddInTheCart(bookId: string) {
                 >
                     <BookItem
                         class="book-item"
-                        v-for="(book, i) in bookList"
-                        :key="i"
+                        v-for="book in bookList"
+                        :key="book.id"
                         :volumeId="book.id"
-                        :inTheCart="props.basket.includes(book.id)"
-                        @addInTheCart="handleAddInTheCart"
                     />
                 </div>
                 <button

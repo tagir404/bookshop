@@ -1,0 +1,1 @@
+export const fixReqString = (str: string): string => str.replace('http://', 'https://')
