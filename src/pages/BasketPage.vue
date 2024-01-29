@@ -105,7 +105,7 @@ h1 {
     overflow: hidden;
 
     &_removing {
-        animation: removing .7s linear 0s;
+        animation: removing 0.7s linear 0s;
     }
 
     &__img {

@@ -4,7 +4,9 @@ import type { Book } from '@/modules/types'
 
 export const useBasketStore = defineStore('basket', () => {
     const books = ref<Book[]>([])
-    const totalPrice = computed(() => Math.round(books.value.reduce((acc, book) => acc + book.saleInfo.retailPrice.amount, 0)))
+    const totalPrice = computed(() =>
+        Math.round(books.value.reduce((acc, book) => acc + book.saleInfo.retailPrice.amount, 0))
+    )
 
     function addBookInBasket(book: Book) {
         books.value.push(book)
@@ -39,7 +41,9 @@ export const useDialogStore = defineStore('dialog', () => {
     function open() {
         if (balanceStore.enoughBalanceToBuy) {
             content.title = `Покупка на сумму ${basketStore.totalPrice} &#8381;`
-            content.text = `Остаток на балансе после покупки ${balanceStore.balance - basketStore.totalPrice} &#8381;`
+            content.text = `Остаток на балансе после покупки ${
+                balanceStore.balance - basketStore.totalPrice
+            } &#8381;`
         } else {
             content.title = 'Недостаточно денег на балансе'
             content.text = ''

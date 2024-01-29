@@ -10,9 +10,7 @@ const dialogStore = useDialogStore()
         :open="dialogStore.isOpen"
         v-if="dialogStore.isOpen"
     >
-        <div
-            class="dialog__content animate__animated animate__zoomIn animate__faster"
-        >
+        <div class="dialog__content animate__animated animate__zoomIn animate__faster">
             <h3
                 class="dialog__title"
                 v-html="dialogStore.content.title"

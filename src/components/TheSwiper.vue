@@ -1,10 +1,7 @@
 <script setup lang="ts">
+import { getImgUrl } from '@/modules/utils'
 import { register } from 'swiper/element/bundle'
 register()
-
-function getImageUrl(index: number) {
-  return new URL(`../assets/img/slides/${index}.jpg`, import.meta.url).href
-}
 </script>
 
 <template>
@@ -19,7 +16,10 @@ function getImageUrl(index: number) {
                 v-for="(slide, i) in 3"
                 :key="i"
             >
-                <img :src="getImageUrl(slide)" :alt="`Слайд ${i + 1}`" />
+                <img
+                    :src="getImgUrl(slide)"
+                    :alt="`Слайд ${i + 1}`"
+                />
             </swiper-slide>
         </swiper-container>
     </div>

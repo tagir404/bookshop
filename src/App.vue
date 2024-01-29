@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { useDialogStore } from '@/store/store';
+import { useDialogStore } from '@/store/store'
 import TheHeader from '@/components/TheHeader.vue'
 import PurchaseDialog from '@/components/PurchaseDialog.vue'
 
@@ -11,13 +11,16 @@ onMounted(() => {
     headerHeight.value = document.querySelector('header')?.offsetHeight || 0
 })
 
-watch(() => dialogStore.isOpen, () => {
-    if(dialogStore.isOpen) {
-        document.querySelector('body')?.classList.add('modal-open')
-    } else {
-        document.querySelector('body')?.classList.remove('modal-open')
+watch(
+    () => dialogStore.isOpen,
+    () => {
+        if (dialogStore.isOpen) {
+            document.querySelector('body')?.classList.add('modal-open')
+        } else {
+            document.querySelector('body')?.classList.remove('modal-open')
+        }
     }
-})
+)
 </script>
 
 <template>
