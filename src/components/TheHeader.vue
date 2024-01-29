@@ -9,7 +9,7 @@ const balanceStore = useBalanceStore()
     <header>
         <div class="container">
             <RouterLink to="/" class="shopname">Bookshop</RouterLink>
-            <!-- <p class="balance">Баланс: {{ balanceStore.balance }} &#8381;</p> -->
+            <p class="balance">Баланс: {{ balanceStore.balance }} &#8381;</p>
             <div class="header-btns">
                 <button class="btn-user"></button>
                 <RouterLink to="/basket" class="btn-bag">
@@ -27,10 +27,11 @@ header {
     z-index: 100;
     width: 100%;
     background: #fff;
-    height: 116px;
     display: flex;
     align-items: center;
-    box-shadow: 1px 1px 40px #f7f7f7;
+    box-shadow: 1px 1px 40px #d6d6d6;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .container {
@@ -46,7 +47,8 @@ header {
 }
 
 .balance {
-    font-size: 20px;
+    font-weight: 500;
+    font-size: 24px;
     margin-left: auto;
 }
 
@@ -76,8 +78,8 @@ header {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 13px;
-    min-height: 13px;
+    min-width: 15px;
+    min-height: 15px;
     border-radius: 50%;
     background: #ff353a;
     position: absolute;
@@ -87,7 +89,6 @@ header {
 
 @media (max-width: 768px) {
     header {
-        height: auto;
         padding-top: 20px;
         padding-bottom: 20px;
     }
