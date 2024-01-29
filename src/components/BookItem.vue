@@ -68,7 +68,7 @@ watch(
                 @click="basketStore.addBookInBasket(book)"
                 :disabled="inTheCart"
             >
-                {{ inTheCart ? 'In the cart' : 'Buy now' }}
+                {{ inTheCart ? 'В корзине' : 'Добавить в корзину' }}
             </button>
         </div>
     </div>

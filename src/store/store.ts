@@ -3,15 +3,18 @@ import { ref, computed, reactive } from 'vue'
 import type { Book } from '@/modules/types'
 
 export const useBasketStore = defineStore('basket', () => {
-    const books = ref<Book[]>(JSON.parse(localStorage.getItem('basket') || '[]'))
+    const books = ref<Book[]>([])
     const totalPrice = computed(() => Math.round(books.value.reduce((acc, book) => acc + book.saleInfo.retailPrice.amount, 0)))
 
     function addBookInBasket(book: Book) {
         books.value.push(book)
-        localStorage.setItem('basket', JSON.stringify(books.value))
     }
 
-    return { books, totalPrice, addBookInBasket }
+    function removeBookFromBasket(book: Book) {
+        books.value.splice(books.value.indexOf(book), 1)
+    }
+
+    return { books, totalPrice, addBookInBasket, removeBookFromBasket }
 })
 
 export const useBalanceStore = defineStore('balance', () => {
@@ -28,20 +31,19 @@ export const useDialogStore = defineStore('dialog', () => {
         title: '',
         text: ''
     })
-    
+    const isNotification = ref<boolean>(false)
+
     const balanceStore = useBalanceStore()
     const basketStore = useBasketStore()
 
     function open() {
-        if(balanceStore.enoughBalanceToBuy) {
+        if (balanceStore.enoughBalanceToBuy) {
             content.title = `Покупка на сумму ${basketStore.totalPrice} &#8381;`
             content.text = `Остаток на балансе после покупки ${balanceStore.balance - basketStore.totalPrice} &#8381;`
         } else {
             content.title = 'Недостаточно денег на балансе'
             content.text = ''
-            setTimeout(() => {
-                isOpen.value = false
-            }, 2000)
+            showNotification()
         }
         isOpen.value = true
     }
@@ -50,5 +52,22 @@ export const useDialogStore = defineStore('dialog', () => {
         isOpen.value = false
     }
 
-    return { isOpen, content, open, close }
+    function buy() {
+        balanceStore.balance -= basketStore.totalPrice
+        basketStore.books = []
+        content.text = ''
+        content.title = 'Спасибо за покупку'
+        showNotification()
+    }
+
+    function showNotification(): void {
+        isNotification.value = true
+
+        setTimeout(() => {
+            close()
+            isNotification.value = false
+        }, 2000)
+    }
+
+    return { isOpen, isNotification, content, open, close, buy }
 })

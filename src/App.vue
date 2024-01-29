@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { useDialogStore } from './store/store';
-import TheHeader from './components/TheHeader.vue'
-import PurchaseConfirmation from './components/PurchaseConfirmation.vue'
+import { useDialogStore } from '@/store/store';
+import TheHeader from '@/components/TheHeader.vue'
+import PurchaseDialog from '@/components/PurchaseDialog.vue'
 
 const dialogStore = useDialogStore()
 const headerHeight = ref(0)
@@ -25,7 +25,7 @@ watch(() => dialogStore.isOpen, () => {
     <main :style="`margin-top: ${headerHeight}px`">
         <RouterView />
     </main>
-    <PurchaseConfirmation />
+    <PurchaseDialog />
 </template>
 
 <style scoped>

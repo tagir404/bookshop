@@ -10,7 +10,9 @@ const dialogStore = useDialogStore()
         :open="dialogStore.isOpen"
         v-if="dialogStore.isOpen"
     >
-        <div class="dialog__content">
+        <div
+            class="dialog__content animate__animated animate__zoomIn animate__faster"
+        >
             <h3
                 class="dialog__title"
                 v-html="dialogStore.content.title"
@@ -22,9 +24,17 @@ const dialogStore = useDialogStore()
             ></p>
             <button
                 class="dialog__close"
+                v-if="!dialogStore.isNotification"
                 @click="dialogStore.close"
             >
                 &#10005;
+            </button>
+            <button
+                class="dialog__submit btn-primary"
+                v-if="!dialogStore.isNotification"
+                @click="dialogStore.buy"
+            >
+                Купить
             </button>
         </div>
     </dialog>
@@ -53,13 +63,21 @@ const dialogStore = useDialogStore()
         padding: 40px;
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        align-items: center;
         position: relative;
     }
 
     &__title {
         font-size: 24px;
         text-align: center;
+
+        &:not(:last-child) {
+            margin-bottom: 15px;
+        }
+    }
+
+    &__text {
+        margin-bottom: 25px;
     }
 
     &__close {
