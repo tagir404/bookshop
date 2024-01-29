@@ -1,5 +1,9 @@
 # Книжный магазин
 
+## Демо-версия проекта
+https://tagir404.github.io/bookshop/
+
+
 ## Project Setup
 
 ```sh
