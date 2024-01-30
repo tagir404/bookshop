@@ -21,7 +21,7 @@ export const useBasketStore = defineStore('basket', () => {
 
 export const useBalanceStore = defineStore('balance', () => {
     const basketStore = useBasketStore()
-    const balance = ref<number>(1000)
+    const balance = ref<number>(2500)
     const enoughBalanceToBuy = computed<boolean>(() => balance.value - basketStore.totalPrice >= 0)
 
     return { balance, enoughBalanceToBuy }

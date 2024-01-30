@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, watch, computed } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import type { Book } from '@/modules/types'
 import bookCoverPhoto from '@/assets/img/book-cover.png'
 import { useBasketStore } from '@/store/store'
 import { fixReqString } from '@/modules/utils'
 
 const basketStore = useBasketStore()
-
-const props = defineProps<{
-    volumeId: string
-}>()
-
 const book = ref<Book | null>(null)
 const inTheCart = computed(() => !!basketStore.books.find(theBook => theBook.id === book.value?.id))
+const isBookRemoving = ref<boolean>(false)
+
+const props = defineProps<{
+    volumeId?: string
+    propsBook?: Book
+}>()
+
+onBeforeMount(async () => {
+    if (props.propsBook) {
+        book.value = props.propsBook
+    } else {
+        book.value = await getBookInfo()
+    }
+})
 
 async function getBookInfo() {
     const res = await fetch(
@@ -23,21 +32,19 @@ async function getBookInfo() {
     return res
 }
 
-onBeforeMount(async () => {
-    book.value = await getBookInfo()
-})
-
-watch(
-    () => props.volumeId,
-    async () => {
-        book.value = await getBookInfo()
-    }
-)
+function handleRemoveBook(book: Book) {
+    isBookRemoving.value = true
+    setTimeout(() => {
+        isBookRemoving.value = false
+        basketStore.removeBookFromBasket(book)
+    }, 1000)
+}
 </script>
 
 <template>
-    <div
+    <article
         class="book"
+        :class="{'animate__animated animate__zoomOutDown': isBookRemoving}"
         v-if="book"
     >
         <img
@@ -64,14 +71,22 @@ watch(
             ></div>
             <p class="book__price">{{ Math.round(book.saleInfo.retailPrice.amount) }} &#8381;</p>
             <button
-                class="book__btn-buy btn-primary"
+                v-if="!!props.propsBook"
+                class="book__btn-action btn-primary"
+                @click="handleRemoveBook(book)"
+            >
+                Удалить из корзины
+            </button>
+            <button
+                class="book__btn-action btn-primary"
                 @click="basketStore.addBookInBasket(book)"
                 :disabled="inTheCart"
+                v-else
             >
                 {{ inTheCart ? 'В корзине' : 'Добавить в корзину' }}
             </button>
         </div>
-    </div>
+    </article>
 </template>
 
 <style scoped>
@@ -127,11 +142,11 @@ watch(
     margin-bottom: 16px;
 }
 
-.book__btn-buy {
+.book__btn-action {
     width: 100%;
 }
 
-.book__btn-buy:disabled {
+.book__btn-action:disabled {
     color: #fff;
     background: var(--text-gray);
     border-color: var(--text-gray);
@@ -140,7 +155,8 @@ watch(
 
 @media (max-width: 768px) {
     .book__img {
-        width: 150px;
+        width: 100%;
+        max-width: 160px;
     }
 
     .book__info {
@@ -152,11 +168,6 @@ watch(
     .book {
         flex-direction: column;
         width: 100%;
-    }
-
-    .book__img {
-        width: 100%;
-        max-width: 160px;
     }
 
     .book__info {
