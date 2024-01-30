@@ -63,11 +63,11 @@ const dialogStore = useDialogStore()
         flex-direction: column;
         align-items: center;
         position: relative;
+        text-align: center;
     }
 
     &__title {
         font-size: 24px;
-        text-align: center;
 
         &:not(:last-child) {
             margin-bottom: 15px;
@@ -83,6 +83,22 @@ const dialogStore = useDialogStore()
         position: absolute;
         top: 10px;
         right: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dialog {
+        &__content {
+            padding: 20px 40px;
+        }
+
+        &__title {
+            font-size: 18px;
+        }
+
+        &__text {
+            font-size: 14px;
+        }
     }
 }
 </style>

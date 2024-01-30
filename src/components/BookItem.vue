@@ -69,7 +69,7 @@ function handleRemoveBook(book: Book) {
                 v-if="book.volumeInfo.description"
                 v-html="book.volumeInfo.description"
             ></div>
-            <p class="book__price">{{ Math.round(book.saleInfo.retailPrice.amount) }} &#8381;</p>
+            <p class="book__price">{{ Math.round(book.saleInfo.retailPrice.amount) }}&nbsp;&#8381;</p>
             <button
                 v-if="!!props.propsBook"
                 class="book__btn-action btn-primary"

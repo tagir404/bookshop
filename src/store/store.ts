@@ -40,10 +40,10 @@ export const useDialogStore = defineStore('dialog', () => {
 
     function open() {
         if (balanceStore.enoughBalanceToBuy) {
-            content.title = `Покупка на сумму ${basketStore.totalPrice} &#8381;`
+            content.title = `Покупка на сумму ${basketStore.totalPrice}&nbsp;&#8381;`
             content.text = `Остаток на балансе после покупки ${
                 balanceStore.balance - basketStore.totalPrice
-            } &#8381;`
+            }&nbsp;&#8381;`
         } else {
             content.title = 'Недостаточно денег на балансе'
             content.text = ''
@@ -60,7 +60,7 @@ export const useDialogStore = defineStore('dialog', () => {
         balanceStore.balance -= basketStore.totalPrice
         basketStore.books = []
         content.text = ''
-        content.title = 'Спасибо за покупку'
+        content.title = 'Спасибо за покупку!'
         showNotification()
     }
 
