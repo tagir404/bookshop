@@ -14,22 +14,25 @@ const containerPaddingBottom = computed(() => basketFooter.value?.offsetHeight)
         class="container"
         :style="`padding-bottom: ${containerPaddingBottom}px`"
     >
-        <h1>Корзина <span v-if="!basketStore.books.length">пуста</span></h1>
+        <h1>Корзина {{ !basketStore.books.length ? 'пуста' : '' }}</h1>
 
-        <div class="book-list" v-if="basketStore.books.length">
+        <div
+            v-if="basketStore.books.length"
+            class="book-list"
+        >
             <BookItem
                 v-for="book in basketStore.books"
                 :key="book.id"
-                :propsBook="book"
+                :book="book"
                 :type="'basket'"
             >
             </BookItem>
         </div>
 
         <div
-            class="basket-footer"
-            ref="basketFooter"
             v-if="basketStore.totalPrice > 0"
+            ref="basketFooter"
+            class="basket-footer"
         >
             <div class="basket-footer__total">
                 Общая сумма: {{ basketStore.totalPrice }} &#8381;

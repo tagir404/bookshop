@@ -6,9 +6,9 @@ const dialogStore = useDialogStore()
 
 <template>
     <dialog
+        v-if="dialogStore.isOpen"
         class="dialog"
         :open="dialogStore.isOpen"
-        v-if="dialogStore.isOpen"
     >
         <div class="dialog__content animate__animated animate__zoomIn animate__faster">
             <h3
@@ -16,20 +16,20 @@ const dialogStore = useDialogStore()
                 v-html="dialogStore.content.title"
             ></h3>
             <p
-                class="dialog__text"
                 v-if="!!dialogStore.content.text"
+                class="dialog__text"
                 v-html="dialogStore.content.text"
             ></p>
             <button
-                class="dialog__close"
                 v-if="!dialogStore.isNotification"
+                class="dialog__close"
                 @click="dialogStore.close"
             >
                 &#10005;
             </button>
             <button
-                class="dialog__submit btn-primary"
                 v-if="!dialogStore.isNotification"
+                class="dialog__submit btn-primary"
                 @click="dialogStore.buy"
             >
                 Купить

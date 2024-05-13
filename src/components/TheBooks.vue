@@ -2,7 +2,7 @@
 import subjects from '@/modules/subjects'
 import { onBeforeMount, ref, watch } from 'vue'
 import type { Book } from '@/modules/types'
-import BookItem from './BookItem.vue'
+import BookItem from '@/components/BookItem.vue'
 
 const currentSubject = ref(subjects[0])
 const bookList = ref<Array<Book>>([])
@@ -19,7 +19,16 @@ async function getBookList() {
         }`
     )
         .then(res => res.json())
-        .then(data => data.items)
+        .then(data => data.items.map((book: Book) => getBookFullInfo(book.id)))
+    return await Promise.all(res)
+}
+
+async function getBookFullInfo(volumeId: string) {
+    const res = await fetch(
+        `https://www.googleapis.com/books/v1/volumes/${volumeId}?country=ru&key=${
+            import.meta.env.VITE_GOOGLE_BOOKS_API_KEY
+        }`
+    ).then(res => res.json())
     return res
 }
 
@@ -50,10 +59,10 @@ function noMoreBooks() {
             <aside>
                 <ul class="subjects">
                     <li
-                        class="subject"
-                        :class="{ active: subject === currentSubject }"
                         v-for="(subject, i) in subjects"
                         :key="i"
+                        class="subject"
+                        :class="{ active: subject === currentSubject }"
                         @click="currentSubject = subject"
                     >
                         {{ subject }}
@@ -62,20 +71,21 @@ function noMoreBooks() {
             </aside>
             <div class="books">
                 <div
+                    v-if="bookList.length"
                     class="book-list"
-                    v-if="bookList?.length"
                 >
                     <BookItem
-                        class="book-item"
                         v-for="book in bookList"
                         :key="book.id"
-                        :volumeId="book.id"
+                        class="book-item"
+                        :book="book"
+                        :type="'main'"
                     />
                 </div>
                 <button
+                    v-if="!noMoreBooksState && bookList.length"
                     class="more-books-btn btn-primary"
                     @click="loadMoreBooks"
-                    v-if="!noMoreBooksState && bookList?.length"
                 >
                     Load more
                 </button>
