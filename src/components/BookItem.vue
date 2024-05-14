@@ -11,7 +11,6 @@ const inTheCart = computed(() => !!basketStore.books.find(theBook => theBook.id 
 const isBookRemoving = ref<boolean>(false)
 
 const props = defineProps<{
-    volumeId?: string
     book: Book
     type: string
 }>()
@@ -71,6 +70,7 @@ function handleRemoveBook(book: Book) {
             <button
                 v-if="props.type === 'basket'"
                 class="book__btn-action btn-primary"
+                data-test="book-action-btn"
                 @click="handleRemoveBook(book)"
             >
                 Удалить из корзины
@@ -78,6 +78,7 @@ function handleRemoveBook(book: Book) {
             <button
                 v-else
                 class="book__btn-action btn-primary"
+                data-test="book-action-btn"
                 :disabled="inTheCart"
                 @click="basketStore.addBookInBasket(book)"
             >
