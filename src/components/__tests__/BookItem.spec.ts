@@ -1,13 +1,16 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 
 import BookItem from '@/components/BookItem.vue'
 import bookCoverPhoto from '@/assets/img/book-cover.png'
 import { fixReqString } from '@/modules/utils'
 import { useBasketStore } from '@/store/store'
+import { createPinia, setActivePinia } from 'pinia'
 
 describe('BookItem', () => {
+    setActivePinia(createPinia())
+
     const wrapper = shallowMount(BookItem, {
         props: {
             book: {
@@ -26,14 +29,14 @@ describe('BookItem', () => {
             },
             type: ''
         },
-        global: {
-            plugins: [
-                createTestingPinia({
-                    createSpy: vi.fn(),
-                    stubActions: true
-                })
-            ]
-        }
+        // global: {
+        //     plugins: [
+        //         createTestingPinia({
+        //             createSpy: vi.fn(),
+        //             stubActions: true
+        //         })
+        //     ]
+        // }
     })
 
     it('renders properly', () => {
