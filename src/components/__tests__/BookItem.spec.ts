@@ -1,14 +1,16 @@
-import { describe, it, expect, vi } from 'vitest'
-import { mount, shallowMount } from '@vue/test-utils'
-import { createTestingPinia } from '@pinia/testing'
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 import BookItem from '@/components/BookItem.vue'
 import bookCoverPhoto from '@/assets/img/book-cover.png'
 import { fixReqString } from '@/modules/utils'
 import { useBasketStore } from '@/store/store'
+import { createPinia, setActivePinia } from 'pinia'
 
 describe('BookItem', () => {
-    const wrapper = shallowMount(BookItem, {
+    setActivePinia(createPinia())
+
+    const wrapper = mount(BookItem, {
         props: {
             book: {
                 saleInfo: {
@@ -26,14 +28,6 @@ describe('BookItem', () => {
             },
             type: ''
         },
-        global: {
-            plugins: [
-                createTestingPinia({
-                    createSpy: vi.fn(),
-                    stubActions: true
-                })
-            ]
-        }
     })
 
     it('renders properly', () => {
@@ -52,10 +46,17 @@ describe('BookItem', () => {
         )
     })
 
-    it('adding a book to store', () => {
+    it('adding the book to store', () => {
         const basketStore = useBasketStore()
         const bookActionBtn = wrapper.get('[data-test="book-action-btn"]')
         bookActionBtn.trigger('click')
         expect(!!basketStore.books.find(book => book.id === wrapper.props('book').id)).toBeTruthy()
     })
+
+    // it('remove the book from store', () => {
+    //     const basketStore = useBasketStore()
+    //     const bookActionBtn = wrapper.get('[data-test="book-action-btn"]')
+    //     bookActionBtn.trigger('click')
+    //     expect(!!basketStore.books.find(book => book.id === wrapper.props('book').id)).toBeFalsy()
+    // })
 })
