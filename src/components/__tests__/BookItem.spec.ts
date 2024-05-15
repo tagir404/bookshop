@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { VueWrapper, mount } from '@vue/test-utils'
 
 import BookItem from '@/components/BookItem.vue'
 import bookCoverPhoto from '@/assets/img/book-cover.png'
@@ -8,26 +8,32 @@ import { useBasketStore } from '@/store/store'
 import { createPinia, setActivePinia } from 'pinia'
 
 describe('BookItem', () => {
-    setActivePinia(createPinia())
+    let wrapper: VueWrapper<any>;
+    let basketStore: ReturnType<typeof useBasketStore>;
+    
+    beforeEach(() => {
+        setActivePinia(createPinia())
+        basketStore = useBasketStore()
 
-    const wrapper = mount(BookItem, {
-        props: {
-            book: {
-                saleInfo: {
-                    retailPrice: {
-                        amount: 400
-                    }
+        wrapper = mount(BookItem, {
+            props: {
+                book: {
+                    saleInfo: {
+                        retailPrice: {
+                            amount: 400
+                        }
+                    },
+                    volumeInfo: {
+                        authors: ['Author'],
+                        description: 'Description',
+                        title: 'Book Title',
+                        imageLinks: { small: '' }
+                    },
+                    id: 'test-id-1'
                 },
-                volumeInfo: {
-                    authors: ['Author'],
-                    description: 'Description',
-                    title: 'Book Title',
-                    imageLinks: { small: '' }
-                },
-                id: ''
+                type: ''
             },
-            type: ''
-        },
+        })
     })
 
     it('renders properly', () => {
@@ -46,17 +52,21 @@ describe('BookItem', () => {
         )
     })
 
-    it('adding the book to store', () => {
-        const basketStore = useBasketStore()
+    it('adding a book to the basket', () => {
         const bookActionBtn = wrapper.get('[data-test="book-action-btn"]')
         bookActionBtn.trigger('click')
+    
         expect(!!basketStore.books.find(book => book.id === wrapper.props('book').id)).toBeTruthy()
     })
 
-    // it('remove the book from store', () => {
-    //     const basketStore = useBasketStore()
-    //     const bookActionBtn = wrapper.get('[data-test="book-action-btn"]')
-    //     bookActionBtn.trigger('click')
-    //     expect(!!basketStore.books.find(book => book.id === wrapper.props('book').id)).toBeFalsy()
-    // })
+    it('removing a book from the basket', async () => {
+        basketStore.addBookInBasket(wrapper.props('book'))
+
+        await wrapper.setProps({ type: 'basket' })
+
+        const bookActionBtn = wrapper.get('[data-test="book-action-btn"]')
+        bookActionBtn.trigger('click')
+
+        expect(!!basketStore.books.find(book => book.id === wrapper.props('book').id)).toBeFalsy()
+    })
 })

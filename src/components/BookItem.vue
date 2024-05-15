@@ -1,33 +1,23 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import type { Book } from '@/modules/types'
 import bookCoverPhoto from '@/assets/img/book-cover.png'
 import { useBasketStore } from '@/store/store'
 import { fixReqString } from '@/modules/utils'
-
-const basketStore = useBasketStore()
-
-const inTheCart = computed(() => !!basketStore.books.find(theBook => theBook.id === props.book.id))
-const isBookRemoving = ref<boolean>(false)
 
 const props = defineProps<{
     book: Book
     type: string
 }>()
 
-function handleRemoveBook(book: Book) {
-    isBookRemoving.value = true
-    setTimeout(() => {
-        isBookRemoving.value = false
-        basketStore.removeBookFromBasket(book)
-    }, 1000)
-}
+const basketStore = useBasketStore()
+
+const inTheCart = computed(() => !!basketStore.books.find(book => book.id === props.book.id))
 </script>
 
 <template>
     <article
         class="book"
-        :class="{ 'animate__animated animate__zoomOutDown': isBookRemoving }"
     >
         <img
             class="book__img"
@@ -71,7 +61,7 @@ function handleRemoveBook(book: Book) {
                 v-if="props.type === 'basket'"
                 class="book__btn-action btn-primary"
                 data-test="book-action-btn"
-                @click="handleRemoveBook(book)"
+                @click="basketStore.removeBookFromBasket(book)"
             >
                 Удалить из корзины
             </button>

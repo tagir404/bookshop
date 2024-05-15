@@ -20,13 +20,15 @@ const containerPaddingBottom = computed(() => basketFooter.value?.offsetHeight)
             v-if="basketStore.books.length"
             class="book-list"
         >
-            <BookItem
-                v-for="book in basketStore.books"
-                :key="book.id"
-                :book="book"
-                :type="'basket'"
-            >
-            </BookItem>
+            <TransitionGroup>
+                <BookItem
+                    v-for="book in basketStore.books"
+                    :key="book.id"
+                    :book="book"
+                    :type="'basket'"
+                >
+                </BookItem>
+            </TransitionGroup>
         </div>
 
         <div
