@@ -9,6 +9,7 @@ const dialogStore = useDialogStore()
         v-if="dialogStore.isOpen"
         class="dialog"
         :open="dialogStore.isOpen"
+        data-test="dialog-container"
     >
         <div class="dialog__content animate__animated animate__zoomIn animate__faster">
             <h3
