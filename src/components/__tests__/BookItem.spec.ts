@@ -51,14 +51,14 @@ describe('BookItem', () => {
         )
     })
 
-    it('adds a book to the basket', () => {
+    it('adds a book to the basket by clicking on the button', () => {
         const bookActionBtn = wrapper.get('[data-test="book-action-btn"]')
         bookActionBtn.trigger('click')
     
         expect(!!basketStore.books.find(book => book.id === wrapper.props('book').id)).toBeTruthy()
     })
 
-    it('removes a book from the basket', async () => {
+    it('removes a book from the basket by clicking on the button', async () => {
         basketStore.addBookInBasket(wrapper.props('book'))
 
         await wrapper.setProps({ type: 'basket' })
@@ -69,7 +69,7 @@ describe('BookItem', () => {
         expect(!!basketStore.books.find(book => book.id === wrapper.props('book').id)).toBeFalsy()
     })
 
-    it('disables add button if book is already in the cart', async () => {
+    it('disables add button if book is already in the basket', async () => {
         basketStore.addBookInBasket(wrapper.props('book'))
 
         await wrapper.vm.$nextTick()
